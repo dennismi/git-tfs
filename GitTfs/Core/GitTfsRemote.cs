@@ -157,7 +157,8 @@ namespace Sep.Git.Tfs.Core
 
         public void FetchWithMerge(long mergeChangesetId, params string[] parentCommitsHashes)
         {
-            foreach (var changeset in FetchChangesets())
+            var changesets = FetchChangesets();
+            foreach (var changeset in changesets)
             {
                 AssertTemporaryIndexClean(MaxCommitHash);
                 var log = Apply(MaxCommitHash, changeset);

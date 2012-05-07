@@ -113,6 +113,17 @@ namespace Sep.Git.Tfs.VsCommon
             var changesets = VersionControl.QueryHistory(path, VersionSpec.Latest, 0, RecursionType.Full,
                                                          null, new ChangesetVersionSpec((int) startVersion), VersionSpec.Latest, int.MaxValue, true,
                                                          true, true);
+
+            var branchHistory = VersionControl.GetBranchHistory(new ItemSpec[] { new ItemSpec(remote.TfsRepositoryPath, RecursionType.None) }, VersionSpec.Latest);
+
+            if (branchHistory[0][0].Children.Count != 0)
+            {
+                Debugger.Break();
+                foreach (var child in branchHistory[0][0].Children)
+                {
+                    Trace.WriteLine("Found branched child: "+child);
+                }
+            }
             return changesets.Cast<Changeset>()
                 .OrderBy(changeset => changeset.ChangesetId)
                 .Select(changeset => BuildTfsChangeset(changeset, remote));
